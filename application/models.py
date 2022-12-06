@@ -1,12 +1,13 @@
 import datetime
-from application import db
-
+from application import db, login_manager
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String, nullable=False, unique=True)
+    is_admin = db.Column(db.Boolean, default=False)
     password_hash = db.Column(db.String, nullable=False)
     orders = db.relationship('Order', back_populates='user')
 
@@ -20,6 +21,11 @@ class User(db.Model):
 
     def is_valid_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.query(User).get(int(user_id))
 
 
 class Meal(db.Model):
@@ -58,6 +64,3 @@ class MealInOrder(db.Model):
     count = db.Column(db.Integer, nullable=False)
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
     order = db.relationship('Order', back_populates='meals', uselist=False)
-
-# [['roll', '2'], ['fish', '2'], ['pizza', '2']]
-# ['roll', 'fish', 'pizza']

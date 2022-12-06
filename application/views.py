@@ -1,7 +1,9 @@
-from flask import abort, flash, session, redirect, request, render_template, session, url_for
-from application import app, db
-from application.models import Category, Meal
-from application.forms import OrderForm
+from flask import abort, flash, session, redirect, request, render_template, url_for
+from flask_login import current_user, login_user, logout_user
+
+from application import app, db, EXPIRE_LOGIN
+from application.models import Category, Meal, User
+from application.forms import OrderForm, LoginForm, RegisterForm
 
 
 @app.route('/')
@@ -29,19 +31,36 @@ def auth():
     return render_template('auth.html')
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    if current_user.is_authenticated:
+        return redirect(url_for('main'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = db.session.query(User).filter_by(email=form.email.data).first()
+        login_user(user, remember=True, duration=EXPIRE_LOGIN)
+        return redirect(url_for('account'))
+    return render_template('login.html', form=form)
 
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    return render_template('register.html')
+    if current_user.is_authenticated:
+        return redirect(url_for('main'))
+    form = RegisterForm()
+    if form.validate_on_submit():
+        user = User(email=form.email.data)  # type: ignore
+        user.password = form.password.data
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('login'))
+    return render_template('register.html', form=form)
 
 
 @app.route('/logout')
 def logout():
-    pass
+    logout_user()
+    return redirect(url_for('main'))
 
 
 @app.route('/ordered')
