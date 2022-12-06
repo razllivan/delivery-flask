@@ -6,9 +6,10 @@
         <h1 class="h3 my-4">Корзина</h1>
 
         <div class="alert alert-warning" role="alert">Блюдо удалено из корзины</div>
-        <div class="alert alert-warning" role="alert">Чтобы сделать заказ – <a href="/login.html">войдите</a> или <a
-                href="/register.html">зарегистрируйтесь</a></div>
-
+        {% if not current_user.is_authenticated %}
+            <div class="alert alert-warning" role="alert">Чтобы сделать заказ – <a href="/login.html">войдите</a> или <a
+                    href="/register.html">зарегистрируйтесь</a></div>
+        {% endif %}
         <div class="row mt-5">
 
 
@@ -22,7 +23,7 @@
                             {{ form.name.label }}
                             {{ form.name(class_='font-weight-bold form-control', autofocus=true) }}
                             {% for error in form.name.errors %}
-                            <p class="text-danger">{{ error }}</p>
+                                <p class="text-danger">{{ error }}</p>
                             {% endfor %}
                         </div>
                     </div>
@@ -32,7 +33,7 @@
                             {{ form.address.label }}
                             {{ form.address(class_='font-weight-bold form-control') }}
                             {% for error in form.address.errors %}
-                            <p class="text-danger">{{ error }}</p>
+                                <p class="text-danger">{{ error }}</p>
                             {% endfor %}
 
 
@@ -44,7 +45,7 @@
                             {{ form.tel.label }}
                             {{ form.tel(class_='font-weight-bold form-control') }}
                             {% for error in form.tel.errors %}
-                            <p class="text-danger">{{ error }}</p>
+                                <p class="text-danger">{{ error }}</p>
                             {% endfor %}
 
                         </div>
@@ -53,8 +54,12 @@
 
                     {#                        <input type="hidden" value="875" name="order_summ">#}
                     {#                        <input type="hidden" value="[1,3,4]" name="order_cart">#}
-
+                    {% if not current_user.is_authenticated %}
+                    {{ form.submit(class_='mt-3 mb-5 btn btn-danger', disabled=true) }}
+                    {% else %}
                     {{ form.submit(class_='mt-3 mb-5 btn btn-danger') }}
+                {% endif %}
+
 
                 </form>
             </div>

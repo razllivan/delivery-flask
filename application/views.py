@@ -1,8 +1,8 @@
 from flask import abort, flash, session, redirect, request, render_template, url_for
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_user, logout_user, login_required
 
 from application import app, db, EXPIRE_LOGIN
-from application.models import Category, Meal, User
+from application.models import Category, Meal, User, Order, MealInOrder
 from application.forms import OrderForm, LoginForm, RegisterForm
 
 
@@ -12,17 +12,11 @@ def main():
     return render_template('main.html', categories=categories)
 
 
-@app.route('/cart', methods=['GET', 'POST'])
-def cart():
-    form = OrderForm()
-
-    if form.validate_on_submit():
-        return redirect(url_for('ordered'))
-    return render_template('cart.html', form=form)
-
-
 @app.route('/account')
+@login_required
 def account():
+
+    # orders = db.session.query(Order).
     return render_template('account.html')
 
 
@@ -89,3 +83,20 @@ def add_to_cart(id):
     session['cart'] = cart
     session['cart_total'] = total
     return redirect(url_for('main'))
+
+
+@app.route('/cart', methods=['GET', 'POST'])
+def cart():
+    form = OrderForm()
+    if form.validate_on_submit():
+        order = Order(total=session['cart_total'], name=form.name.data, phone=form.tel.data,
+                      address=form.address.data, user=current_user)
+        db.session.add(order)
+        for meal_data in session['cart']:
+            meal = MealInOrder(meal_id=meal_data['id'], count=meal_data['count'], order=order)
+            db.session.add(meal)
+        db.session.commit()
+        session.pop('cart')
+        session.pop('cart_total')
+        return redirect(url_for('ordered'))
+    return render_template('cart.html', form=form)
