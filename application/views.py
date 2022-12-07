@@ -99,7 +99,7 @@ def cart():
 
 @app.route('/del/<int:id>')
 def del_item_in_cart(id):
-    flash('Блюдо удалено из корзины')
+    flash('Блюдо удалено из корзины', 'del_item')
     cart = session['cart']
 
     for item in cart:
