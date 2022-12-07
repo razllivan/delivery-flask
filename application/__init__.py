@@ -9,5 +9,6 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login_manager = LoginManager(app)
+login_manager.login_view = 'login'
 EXPIRE_LOGIN = timedelta(minutes=5)
 from application import views, models

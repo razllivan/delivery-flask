@@ -15,14 +15,8 @@ def main():
 @app.route('/account')
 @login_required
 def account():
-
     # orders = db.session.query(Order).
     return render_template('account.html')
-
-
-@app.route('/auth')
-def auth():
-    return render_template('auth.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -52,6 +46,7 @@ def register():
 
 
 @app.route('/logout')
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('main'))
@@ -100,3 +95,22 @@ def cart():
         session.pop('cart_total')
         return redirect(url_for('ordered'))
     return render_template('cart.html', form=form)
+
+
+@app.route('/del/<int:id>')
+def del_item_in_cart(id):
+    flash('Блюдо удалено из корзины')
+    cart = session['cart']
+
+    for item in cart:
+        if item['id'] == id:
+            cart.remove(item)
+            session['cart_total'] -= item['price'] * item['count']
+            session['cart'] = cart
+            break
+
+    return redirect(url_for('cart'))
+
+@app.route('/crm')
+def crm():
+    pass

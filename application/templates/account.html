@@ -6,31 +6,61 @@
         <section class="row">
             <div class="col-12 col-lg-8">
                 <h1 class="h3 my-5">Личный кабинет. Заказы</h1>
-                {% for order in current_user.orders %}
+                {% if current_user.orders %}
+                    {% for order in current_user.orders %}
+                        <div class="mb-4 card">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-7 col-lg-9">
+                                            <span class="h5 font-weight-bold">{{ order.date }}</span>
+                                            <span class="h5">- {{ order.total }} ₽</span>
+                                        </div>
+
+                                    </div>
+                                </li>
+                                <div class="card-body">
+                                    <div class="row">
+                                        {% for meal_in_order in order.meals %}
+                                            <p class="col-4 text-muted">{{ meal_in_order.meal.title }}</p>
+                                            <p class="col-2 text-muted"> {{ meal_in_order.count }}</p>
+                                            <p class="col-6 text-muted"> {{ meal_in_order.meal.price }} ₽ </p>
+
+                                        {% endfor %}
+
+                                    </div>
+                                </div>
+                            </ul>
+                        </div>
+                    {% endfor %}
+                {% else %}
                     <div class="mb-4 card">
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
                                 <div class="row">
                                     <div class="col-7 col-lg-9">
-                                        <span class="h5 font-weight-bold">{{ order.date }}</span>
-                                        <span class="h5">- {{ order.total }} P</span>
+                                        <span class="h5 font-weight-bold"> 15 Декабря 2077 </span>
+                                        <span class="h5">-  99  P</span>
                                     </div>
 
                                 </div>
                             </li>
                             <div class="card-body">
                                 <div class="row">
-                                    {% for meal_in_order in order.meals %}
-                                    <p class="col-4 text-muted">{{ meal_in_order.meal.title }}</p>
-                                    <p class="col-2 text-muted"> {{ meal_in_order.count }}</p>
-                                    <p class="col-6 text-muted"> {{ meal_in_order.meal.price }} </p>
 
-                                        {% endfor %}
+                                    <p class="col-4 text-muted"> Тут будет вкусная пицца</p>
+                                    <p class="col-2 text-muted"> 1 </p>
+                                    <p class="col-6 text-muted"> 99 </p>
+                                    <p class="col-4 text-muted"> Тут будут вкусные роллы</p>
+                                    <p class="col-2 text-muted"> 1 </p>
+                                    <p class="col-6 text-muted"> 99 </p>
+
+
                                 </div>
                             </div>
                         </ul>
                     </div>
-                {% endfor %}
+                {% endif %}
 
 
             </div>
