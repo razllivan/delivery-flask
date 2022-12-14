@@ -1,9 +1,10 @@
 from flask import abort, flash, session, redirect, request, render_template, url_for
 from flask_login import current_user, login_user, logout_user, login_required
-
-from application import app, db, EXPIRE_LOGIN
+from functools import wraps
+from application import app, db, EXPIRE_LOGIN, admin
 from application.models import Category, Meal, User, Order, MealInOrder
 from application.forms import OrderForm, LoginForm, RegisterForm
+
 
 
 @app.route('/')
@@ -111,6 +112,17 @@ def del_item_in_cart(id):
 
     return redirect(url_for('cart'))
 
-@app.route('/crm')
-def crm():
-    pass
+
+def admin_only(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if current_user.is_anonymous or current_user.is_admin is False:
+            abort(403, description='Доступно только админам')
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+
+
+

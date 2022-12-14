@@ -1,12 +1,12 @@
 <header class="container mt-3">
     <nav class="py-1 navbar navbar-dark bg-dark navbar-expand-sm">
         <a href="{{ url_for('main') }}" class="navbar-brand h5 my-0 ">Delivery</a>
-        <ul class="navbar-nav mr-auto">
+        <ul class="navbar-nav mr-auto h5">
 
 
-            <li class="nav-item"><a href="{{ url_for('account') }}" class="nav-link h5 my-0">Заказы</a></li>
+            <li class="nav-item"><a href="{{ url_for('account') }}" class="nav-link my-0">Заказы</a></li>
             {% if current_user.is_admin %}
-            <li class="nav-item"><a href="{{ url_for('crm') }}" class="nav-link h5 my-0">CRM</a></li>
+            <li class="nav-item"><a href="{{ url_for('admin.index') }}" class="nav-link my-0">CRM</a></li>
             {% endif %}
 
         </ul>

@@ -1,7 +1,13 @@
 import datetime
-from application import db, login_manager
-from flask_login import UserMixin
+
+from flask import abort
+from flask_admin import AdminIndexView
+
+
+from application import db, login_manager, admin
+from flask_login import UserMixin, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_admin.contrib.sqla import ModelView
 
 
 class User(db.Model, UserMixin):
@@ -44,6 +50,9 @@ class Category(db.Model):
     title = db.Column(db.String, nullable=False)
     meals = db.relationship('Meal', back_populates='category')
 
+    def __repr__(self):
+        return f'<{self.title}>'
+
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -71,3 +80,6 @@ class MealInOrder(db.Model):
 
     def __repr__(self):
         return f'<Meal {self.meal_id} in order {self.order_id}>'
+
+
+
