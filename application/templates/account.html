@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 
+{% block title %}Заказы{% endblock %}
 
 {% block body %}
     <main class="container">
         <section class="row">
             <div class="col-12 col-lg-8">
                 <h1 class="h3 my-5">Личный кабинет. Заказы</h1>
+
                 {% if current_user.orders %}
                     {% for order in current_user.orders %}
                         <div class="mb-4 card">
@@ -25,7 +27,6 @@
                                             <p class="col-4 text-muted">{{ meal_in_order.meal.title }}</p>
                                             <p class="col-2 text-muted"> {{ meal_in_order.count }}</p>
                                             <p class="col-6 text-muted"> {{ meal_in_order.meal.price }} ₽ </p>
-
                                         {% endfor %}
 
                                     </div>
@@ -33,6 +34,7 @@
                             </ul>
                         </div>
                     {% endfor %}
+
                 {% else %}
                     <div class="mb-4 card">
                         <ul class="list-group list-group-flush">
@@ -47,15 +49,12 @@
                             </li>
                             <div class="card-body">
                                 <div class="row">
-
                                     <p class="col-4 text-muted"> Тут будет вкусная пицца</p>
                                     <p class="col-2 text-muted"> 1 </p>
                                     <p class="col-6 text-muted"> 99 </p>
                                     <p class="col-4 text-muted"> Тут будут вкусные роллы</p>
                                     <p class="col-2 text-muted"> 1 </p>
                                     <p class="col-6 text-muted"> 99 </p>
-
-
                                 </div>
                             </div>
                         </ul>

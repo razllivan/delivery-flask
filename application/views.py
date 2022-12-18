@@ -6,7 +6,6 @@ from application.models import Category, Meal, User, Order, MealInOrder
 from application.forms import OrderForm, LoginForm, RegisterForm
 
 
-
 @app.route('/')
 def main():
     categories = db.session.query(Category).all()
@@ -113,16 +112,15 @@ def del_item_in_cart(id):
     return redirect(url_for('cart'))
 
 
-def admin_only(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if current_user.is_anonymous or current_user.is_admin is False:
-            abort(403, description='Доступно только админам')
-        return f(*args, **kwargs)
+@app.errorhandler(Exception)
+def handle_error(error):
+    return render_template('error.html', error=error), error.code
 
-    return decorated_function
-
-
-
-
-
+# def admin_only(f):
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if current_user.is_anonymous or current_user.is_admin is False:
+#             abort(403, description='Доступно только админам')
+#         return f(*args, **kwargs)
+#
+#     return decorated_function

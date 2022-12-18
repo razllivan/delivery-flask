@@ -3,7 +3,6 @@ import datetime
 from flask import abort
 from flask_admin import AdminIndexView
 
-
 from application import db, login_manager, admin
 from flask_login import UserMixin, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -28,6 +27,9 @@ class User(db.Model, UserMixin):
     def is_valid_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def __repr__(self):
+        return f'{self.email}'
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -44,6 +46,9 @@ class Meal(db.Model):
     category = db.relationship('Category', back_populates='meals', uselist=False)
     orders = db.relationship('MealInOrder', back_populates='meal')
 
+    def __repr__(self):
+        return f'{self.title}'
+
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -51,7 +56,7 @@ class Category(db.Model):
     meals = db.relationship('Meal', back_populates='category')
 
     def __repr__(self):
-        return f'<{self.title}>'
+        return f'{self.title}'
 
 
 class Order(db.Model):
@@ -67,7 +72,7 @@ class Order(db.Model):
     meals = db.relationship('MealInOrder', back_populates='order', cascade='all, delete, delete-orphan')
 
     def __repr__(self):
-        return f'<Order {self.id} from user {self.user_id}>'
+        return f'<Order №{self.id}>'
 
 
 class MealInOrder(db.Model):
@@ -79,7 +84,4 @@ class MealInOrder(db.Model):
     order = db.relationship('Order', back_populates='meals', uselist=False)
 
     def __repr__(self):
-        return f'<Meal {self.meal_id} in order {self.order_id}>'
-
-
-
+        return f'<{self.meal.title} кол-во: {self.count}>'

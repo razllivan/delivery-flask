@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
 {% block body %}
-
-
     <main class="container mt-3">
         <section class="my-5 jumbotron jumbotron-fluid">
             <div class="text-center">
@@ -13,13 +14,13 @@
                 <p class="pt-4">Доставка дронами</p>
             </div>
         </section>
-        {% for category in categories %}
 
+        {% for category in categories %}
             <section>
                 <h3 class="my-4">{{ category.title }}</h3>
                 <div class="row mt-4">
-                    {% for meal in category.meals %}
 
+                    {% for meal in category.meals %}
                         <div class="col-12 col-md-4">
                             <div class="card mb-3">
                                 <img src='{{ url_for('static', filename='pictures/' + meal.picture) }}' width="300"

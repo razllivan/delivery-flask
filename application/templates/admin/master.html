@@ -1,8 +1,16 @@
 {% extends admin_base_template %}
 
+{% block title %}
+    {% if admin_view.category %}
+        {{ admin_view.category }} -
+    {% endif %}
+    {{ admin_view.admin.name }} -
+    {{ admin_view.name }}
+{% endblock %}
+
 {% block page_body %}
     <div class="container mt-3{% if config.get('FLASK_ADMIN_FLUID_LAYOUT', False) %}-fluid{% endif %}">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-2 py-1" role="navigation">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-2 py-1 sticky-top" role="navigation">
             <!-- Brand and toggle get grouped for better mobile display -->
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#admin-navbar-collapse"
                     aria-controls="admin-navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -11,7 +19,7 @@
             <!-- navbar content -->
             <div class="collapse navbar-collapse" id="admin-navbar-collapse">
                 {% block brand %}
-                    <a class="navbar-brand " href="{{ admin_view.admin.url }}">{{ admin_view.admin.name }}</a>
+                    <a class="navbar-brand h5 mb-0" href="{{ admin_view.admin.url }}">{{ admin_view.admin.name }}</a>
                 {% endblock %}
                 {% block main_menu %}
                     <ul class="navbar-nav mr-auto">
@@ -25,7 +33,7 @@
                     </ul>
                 {% endblock %}
                 {% block access_control %}
-                    <a href="{{ url_for('main') }}" class="btn btn-light btn-sm ml-4">Вернуться на сайт</a>
+                    <a href="{{ url_for('main') }}" class="btn btn-light btn-sm">Вернуться на сайт</a>
 
                 {% endblock %}
             </div>
