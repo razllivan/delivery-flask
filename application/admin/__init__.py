@@ -4,6 +4,7 @@ from application.models import User, Order, Meal, MealInOrder, Category
 from flask_login import current_user
 from flask_admin import Admin, expose, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
+
 from wtforms.validators import DataRequired, Length, EqualTo
 from wtforms import PasswordField
 
@@ -41,13 +42,12 @@ class UserView(MyModelView):
     }
 
     def on_model_change(self, form, User, is_created):
-        if form.set_password.data:
-            User.password = form.set_password.data
-        else:
-            del form.set_password
-
-    # def on_form_prefill(self, form, id):
-    #     form.set_password.data = ''
+        print(form.data)
+        if 'set_password' in form.data:
+            if form.set_password.data:
+                User.password = form.set_password.data
+            else:
+                del form.set_password
 
 
 class OrderView(MyModelView):
@@ -88,4 +88,3 @@ admin.add_view(OrderView(Order, db.session))
 admin.add_view(MealView(Meal, db.session))
 admin.add_view(MyModelView(MealInOrder, db.session))
 admin.add_view(MyModelView(Category, db.session))
-
