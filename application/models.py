@@ -1,12 +1,9 @@
 import datetime
 
-from flask import abort
-from flask_admin import AdminIndexView
-
-from application import db, login_manager, admin
-from flask_login import UserMixin, current_user
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_admin.contrib.sqla import ModelView
+
+from application import db, login_manager
 
 
 class User(db.Model, UserMixin):

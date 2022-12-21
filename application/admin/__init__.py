@@ -1,12 +1,12 @@
-from application import db, app
 from flask import abort
-from application.models import User, Order, Meal, MealInOrder, Category
-from flask_login import current_user
-from flask_admin import Admin, expose, AdminIndexView
+from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
-
-from wtforms.validators import DataRequired, Length, EqualTo
+from flask_login import current_user
 from wtforms import PasswordField
+from wtforms.validators import EqualTo
+
+from application import db, app
+from application.models import User, Order, Meal, MealInOrder, Category
 
 
 # Create customized model view class with check admin role
@@ -42,7 +42,6 @@ class UserView(MyModelView):
     }
 
     def on_model_change(self, form, User, is_created):
-        print(form.data)
         if 'set_password' in form.data:
             if form.set_password.data:
                 User.password = form.set_password.data

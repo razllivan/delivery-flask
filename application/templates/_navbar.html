@@ -1,90 +1,61 @@
 <header class="container mt-3 sticky-top">
-    <nav class="py-1 navbar navbar-dark bg-dark navbar-expand-sm" >
-        <a href="{{ url_for('main') }}" class="navbar-brand h5 mb-0 ">Delivery</a>
-        <ul class="navbar-nav mr-auto h5">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-2 py-1 sticky-top" role="navigation">
 
-
-            <li class="nav-item"><a href="{{ url_for('account') }}" class="nav-link my-0">Заказы</a></li>
-
-            {% if current_user.is_admin %}
-                <li class="nav-item"><a href="{{ url_for('admin.index') }}" class="nav-link my-0">CRM</a></li>
-            {% endif %}
-
+        <!--shows only cart outside toggle(in mobile version)-->
+        <ul class="navbar-nav h5 d-md-none mx-auto">
+            <li class="nav-item "><a href="{{ url_for('cart') }}" class="nav-link my-0 h6">
+                Корзина(
+                {%- if session['cart_total'] -%}
+                    {{ session['cart'] | sum(attribute='count') }} товар
+                    {{ session['cart_total'] }} руб.
+                {%- else -%}
+                    Пустая
+                {%- endif %})</a></li>
         </ul>
 
+        <!-- toggle get grouped for better mobile display -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#admin-navbar-collapse"
+                aria-controls="admin-navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-        <a href="{{ url_for('cart') }}" class="btn h5 my-0 text-white bg-dark ">
-            Корзина(
-            {%- if session['cart_total'] -%}
-                {{ session['cart'] | sum(attribute='count') }} блюд
-                {{ session['cart_total'] }} руб.
-            {%- else -%}
-                Пустая
-            {%- endif %})</a>
-        <img class="ml-2"
-             src=data:image/png;base64,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
-             alt="" width="24" height="25">
+        <!-- navbar content -->
+        <div class="collapse navbar-collapse" id="admin-navbar-collapse">
+            <a class="navbar-brand h5 my-0 " href="{{ url_for('main') }}">Daily Food</a>
 
-        {% if current_user.is_authenticated %}
-            <a href="{{ url_for('logout') }}" class="btn btn-light btn-sm ml-4">Выйти</a>
-        {% else %}
-            <a href="{{ url_for('login') }}" class="btn btn-warning btn-sm ml-4">Войти</a>
-        {% endif %}
+            <ul class="navbar-nav h5 mr-auto">
+                <li class="nav-item"><a href="{{ url_for('account') }}" class="nav-link my-0">Заказы</a></li>
 
+                {% if current_user.is_admin %}
+                    <li class="nav-item"><a href="{{ url_for('admin.index') }}" class="nav-link my-0">CRM</a></li>
+                {% endif %}
+            </ul>
+
+
+            <ul class="navbar-nav ">
+                <!--cart in desktop version -->
+                <li class="nav-item mr-4 d-none d-md-block"><a href="{{ url_for('cart') }}"
+                                                               class="nav-link my-0 h6 ">
+                    Корзина(
+                    {%- if session['cart_total'] -%}
+                        {{ session['cart'] | sum(attribute='count') }} товар
+                        {{ session['cart_total'] }} руб.
+                    {%- else -%}
+                        Пустая
+                    {%- endif %})</a></li>
+
+
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item my-auto"><a href="{{ url_for('logout') }}"
+                                                    class="btn btn-light btn-sm ">Выйти</a>
+                    </li>
+                {% else %}
+                    <li class="my-auto"><a href="{{ url_for('login') }}"
+                                           class="btn btn-warning btn-sm ml-4">Войти</a></li>
+                {% endif %}
+            </ul>
+
+        </div>
 
     </nav>
 </header>
-
-{#TODO navbar for mobile #}
-
-{#<header class="container mt-3 sticky-top">#}
-{#    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-2 py-1 sticky-top" role="navigation">#}
-{#        <!-- Brand and toggle get grouped for better mobile display -->#}
-{#        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#admin-navbar-collapse"#}
-{#                aria-controls="admin-navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">#}
-{#            <span class="navbar-toggler-icon"></span>#}
-{#        </button>#}
-{#        <!-- navbar content -->#}
-{#        <div class="collapse navbar-collapse" id="admin-navbar-collapse">#}
-{#            {% block brand %}#}
-{#                <a class="navbar-brand h5 mb-0" href="{{ url_for('main') }}">Delivery</a>#}
-{#            {% endblock %}#}
-{#            {% block main_menu %}#}
-{#                <ul class="navbar-nav mr-auto h5">#}
-{#                    <li class="nav-item"><a href="{{ url_for('account') }}" class="nav-link my-0">Заказы</a></li>#}
-{##}
-{#                    {% if current_user.is_admin %}#}
-{#                        <li class="nav-item"><a href="{{ url_for('admin.index') }}" class="nav-link my-0">CRM</a></li>#}
-{#                    {% endif %}#}
-{#                </ul>#}
-{#            {% endblock %}#}
-{##}
-{#            {% block menu_links %}#}
-{##}
-{#                <ul class="nav navbar-nav navbar-right">#}
-{#                    <a href="{{ url_for('cart') }}" class="btn h5 my-0 text-white bg-dark ">#}
-{#                        Корзина(#}
-{#                        {%- if session['cart_total'] -%}#}
-{#                            {{ session['cart'] | sum(attribute='count') }} блюд#}
-{#                            {{ session['cart_total'] }} руб.#}
-{#                        {%- else -%}#}
-{#                            Пустая#}
-{#                        {%- endif %})</a>#}
-{#                    <img class="ml-2"#}
-{#                         src=data:image/png;base64,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#}
-{#                         alt="" width="24" height="25">#}
-{##}
-{#                    {% if current_user.is_authenticated %}#}
-{#                        <a href="{{ url_for('logout') }}" class="btn  btn-light btn-sm ml-4">Выйти</a>#}
-{#                    {% else %}#}
-{#                        <a href="{{ url_for('login') }}" class="btn btn-warning btn-sm ml-4">Войти</a>#}
-{#                    {% endif %}#}
-{#                </ul>#}
-{#            {% endblock %}#}
-{#            {% block access_control %}#}
-                {#            <a href="{{ url_for('main') }}" class="btn btn-light btn-sm ml-4">Вернуться на сайт</a>#}
-{##}
-{#            {% endblock %}#}
-{#        </div>#}
-{#    </nav>#}
-{#</header>#}
