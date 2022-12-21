@@ -82,3 +82,6 @@ class MealInOrder(db.Model):
 
     def __repr__(self):
         return f'<{self.meal.title} кол-во: {self.count}>'
+
+
+
